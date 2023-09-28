@@ -47,7 +47,7 @@ To use this Docker image you must have your Docker engine version greater than o
 You can download the last image from docker hub, just run the follow command:
 
 ```Shell
-docker run -d -p 50059:50059 --name adempiere-grpc-template-service -e DB_HOST="localhost" -e DB_PORT=5432 -e DB_NAME="adempiere" -e DB_USER="adempiere" -e DB_PASSWORD="adempiere" openls/adempiere-grpc-template-service:template:alpine
+docker run -d -p 50059:50059 --name adempiere-grpc-template-service -e DB_HOST="localhost" -e DB_PORT=5432 -e DB_NAME="adempiere" -e DB_USER="adempiere" -e DB_PASSWORD="adempiere" openls/adempiere-grpc-template-service:alpine
 ```
 
 See all images [here](https://hub.docker.com/r/openls/adempiere-grpc-template-service)
