@@ -12,17 +12,17 @@
  * You should have received a copy of the GNU General Public License                *
  * along with this program. If not, see <https://www.gnu.org/licenses/>.            *
  ************************************************************************************/
-package org.spin.grpc.server;
+package org.spin.template.server;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.compiere.util.Env;
-import org.spin.grpc.controller.Middleware;
-import org.spin.server.setup.SetupLoader;
 import org.spin.service.grpc.authentication.AuthorizationServerInterceptor;
 import org.spin.service.grpc.context.ServiceContextProvider;
+import org.spin.template.controller.TemplateService;
+import org.spin.template.setup.SetupLoader;
 
 import io.grpc.Server;
 import io.grpc.netty.GrpcSslContexts;
@@ -31,8 +31,8 @@ import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.grpc.ServerBuilder;
 
-public class MiddlewareServer {
-	private static final Logger logger = Logger.getLogger(MiddlewareServer.class.getName());
+public class TemplateServer {
+	private static final Logger logger = Logger.getLogger(TemplateServer.class.getName());
 	private ServiceContextProvider contextProvider =  new ServiceContextProvider();
 	private Server server;
 	/**
@@ -52,7 +52,7 @@ public class MiddlewareServer {
 	private void start() throws IOException {
 		//	Start based on provider
         Env.setContextProvider(contextProvider);
-		logger.info("Service Middleware added on " + SetupLoader.getInstance().getServer().getPort());
+		logger.info("Service Template added on " + SetupLoader.getInstance().getServer().getPort());
 		//	
 		ServerBuilder<?> serverBuilder;
 		if(SetupLoader.getInstance().getServer().isTlsEnabled()) {
@@ -62,7 +62,7 @@ public class MiddlewareServer {
 			serverBuilder = ServerBuilder.forPort(SetupLoader.getInstance().getServer().getPort());
 			serverBuilder.intercept(new AuthorizationServerInterceptor());
 		}
-		serverBuilder.addService(new Middleware());
+		serverBuilder.addService(new TemplateService());
 		server = serverBuilder.build().start();
 		logger.info("Server started, listening on " + SetupLoader.getInstance().getServer().getPort());
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -70,7 +70,7 @@ public class MiddlewareServer {
 			public void run() {
 				// Use stderr here since the logger may have been reset by its JVM shutdown hook.
 				logger.info("*** shutting down gRPC server since JVM is shutting down");
-				MiddlewareServer.this.stop();
+				TemplateServer.this.stop();
 				logger.info("*** server shut down");
 			}
 		});
@@ -106,7 +106,7 @@ public class MiddlewareServer {
 		  SetupLoader.loadSetup(setupFileName);
 		  //	Validate load
 		  SetupLoader.getInstance().validateLoad();
-		  final MiddlewareServer server = new MiddlewareServer();
+		  final TemplateServer server = new TemplateServer();
 		  server.start();
 		  server.blockUntilShutdown();
 	  }

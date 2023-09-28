@@ -1,37 +1,15 @@
-# ADempiere Middleware
+# ADempiere Template
 
-<p align="center">
-  <a href="https://adoptium.net/es/temurin/releases/?version=11">
-    <img src="https://badgen.net/badge/Java/11/orange" alt="Java">
-  </a>
-  <a href="https://github.com/adempiere/adempiere-middleware/actions/workflows/ci.yml">
-    <img src="https://github.com/adempiere/adempiere-middleware/actions/workflows/ci.yml/badge.svg" alt="Build GH Action">
-  </a>
-  <a href="https://github.com/adempiere/adempiere-middleware/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-GNU/GPL%20(v2)-blue" alt="License">
-  </a>
-  <a href="https://github.com/adempiere/adempiere-middleware/releases/latest">
-    <img src="https://img.shields.io/github/release/adempiere/adempiere-middleware.svg" alt="GitHub release">
-  </a>
-  <a href="https://discord.gg/T6eH6A7PJZ">
-    <img src="https://badgen.net/badge/discord/join%20chat" alt="Discord">
-  </a>
-</p>
-
-This project is the first initiative for improve ADempiere as a microservice based. Currently ADempiere is very monolithic structure.
-
-
-I just want to improve ADempiere for many concorrent users.
-
+This project allows define a new project using gRPC with ADempiere. Is very good for create your own service like push Orders, attendance and other business case.
 
 ## Requirements
 
-The ADempiere middleware is a service to expose ADempiere as gRPC service with a little functionality of ADempiere:
+The ADempiere template is a service to expose ADempiere as gRPC service with a little functionality of ADempiere:
  
  - Create Entity
  - Update Entity
  - Delete Entity
- - Delete Entity
+ - Get Entity
  
 Since the ADempiere dependency is vital for this project is high recommended that the you are sure that of project [adempiere-jwt-token](https://github.com/adempiere/adempiere-jwt-token) is installed and the setup is runned in ADempiere Database.
 
@@ -49,7 +27,7 @@ For Token validation is used [JWT](https://www.viralpatel.net/java-create-valida
 ## Run with Docker
 
 ```Shell
-docker pull openls/adempiere-middleware:alpine
+docker pull openls/adempiere-grpc-template-service:alpine
 ```
 
 ### Minimal Docker Requirements
@@ -59,24 +37,24 @@ To use this Docker image you must have your Docker engine version greater than o
 - `DB_TYPE`: Database Type (Supported `Oracle` and `PostgreSQL`). Default `PostgreSQL`
 - `DB_HOST`: Hostname for data base server. Default: `localhost`
 - `DB_PORT`: Port used by data base server. Default: `5432`
-- `DB_NAME`: Database name that adempiere-middleware will use to connect with the database. Default: `adempiere`
-- `DB_USER`: Database user that adempiere-middleware will use to connect with the database. Default: `adempiere`
+- `DB_NAME`: Database name that adempiere-grpc-template-service will use to connect with the database. Default: `adempiere`
+- `DB_USER`: Database user that adempiere-grpc-template-service will use to connect with the database. Default: `adempiere`
 - `DB_PASSWORD`: Database password that Adempiere-Backend will use to connect with the database. Default: `adempiere`
-- `SERVER_PORT`: Port to access adempiere-middleware from outside of the container. Default: `50059`
+- `SERVER_PORT`: Port to access adempiere-grpc-template-service from outside of the container. Default: `50059`
 - `SERVER_LOG_LEVEL`: Log Level. Default: `WARNING`
 - `TZ`: (Time Zone) Indicates the time zone to set in the nginx-based container, the default value is `America/Caracas` (UTC -4:00).
 
 You can download the last image from docker hub, just run the follow command:
 
 ```Shell
-docker run -d -p 50059:50059 --name adempiere-middleware -e SERVER_PRIVATE_KEY="<Your ADempiere Token>" -e DB_HOST="localhost" -e DB_PORT=5432 -e DB_NAME="adempiere" -e DB_USER="adempiere" -e DB_PASSWORD="adempiere" openls/adempiere-middleware:middleware:alpine
+docker run -d -p 50059:50059 --name adempiere-grpc-template-service -e DB_HOST="localhost" -e DB_PORT=5432 -e DB_NAME="adempiere" -e DB_USER="adempiere" -e DB_PASSWORD="adempiere" openls/adempiere-grpc-template-service:template:alpine
 ```
 
-See all images [here](https://hub.docker.com/r/openls/adempiere-middleware)
+See all images [here](https://hub.docker.com/r/openls/adempiere-grpc-template-service)
 
 ## Run with Docker Compose
 
-You can also run it with `docker compose` for develop enviroment. Note that this is a easy way for start the service with PostgreSQL and middleware.
+You can also run it with `docker compose` for develop enviroment. Note that this is a easy way for start the service with PostgreSQL and template.
 
 ### Requirements
 
@@ -102,3 +80,7 @@ docker compose up
 ### Some Variables
 
 You can change variables editing the `.env` file. Note that this file have a minimal example.
+
+## What else?
+
+Just rename all word `template` to `your-own-name`.

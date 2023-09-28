@@ -15,7 +15,7 @@ def privateDependencyBaseVersion = "adempiere-3.9.4"
 startScripts.enabled = false
 
 ext {
-	javaMainClass = "org.spin.grpc.server.MiddlewareServer"
+	javaMainClass = "org.spin.template.server.TemplateServer"
 }
 
 application {
@@ -61,7 +61,7 @@ protobuf {
 			
 			  // Allows to override the default for the descriptor set location
 			  task.descriptorSetOptions.path =
-			    "${projectDir}/build/descriptors/adempiere-middleware.pb"
+			    "${projectDir}/build/descriptors/adempiere-grpc-template-service-service.pb"
 			
 			  // If true, the descriptor set will contain line number information
 			  // and comments. Default is false.
@@ -82,15 +82,15 @@ sourceSets {
         }
     }
 }
-task AdempiereMiddlewareServer(type: CreateStartScripts) {
+task AdempiereTemplateServer(type: CreateStartScripts) {
 	mainClass = javaMainClass
-    applicationName = 'adempiere-middleware-server'
+    applicationName = 'adempiere-grpc-template-service-server'
     outputDir = new File(project.buildDir, 'tmp')
     classpath = jar.outputs.files + project.configurations.runtimeClasspath
 }
 
 applicationDistribution.into('bin') {
-	from(AdempiereMiddlewareServer)
+	from(AdempiereTemplateServer)
     fileMode = 0755
 }
 
@@ -127,42 +127,13 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-	implementation 'com.sun.xml.bind:jaxb-impl:3.0.0-M4'
-	implementation 'com.sun.xml.bind:jaxb-core:3.0.0-M4'
-	implementation 'javax.activation:activation:1.1.1'
+    //implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+	//implementation 'com.sun.xml.bind:jaxb-impl:3.0.0-M4'
+	//implementation 'com.sun.xml.bind:jaxb-core:3.0.0-M4'
+	//implementation 'javax.activation:activation:1.1.1'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
 	//	ADempiere Core
 	implementation "${baseGroupId}:base:${baseVersion}"
-	implementation "${baseGroupId}:point-of-sales:${baseVersion}"
-	implementation "${baseGroupId}:store:${baseVersion}"
-	implementation "${baseGroupId}:distribution:${baseVersion}"
-	implementation "${baseGroupId}:freight:${baseVersion}"
-	implementation "${baseGroupId}:store:${baseVersion}"
-	implementation "${baseGroupId}:human-resource-and-payroll:${baseVersion}"
-	implementation "${baseGroupId}:extend:${baseVersion}"
-	implementation "${baseGroupId}:migration:${baseVersion}"
-	implementation "${baseGroupId}:asset:${baseVersion}"
-	implementation "${baseGroupId}:crm:${baseVersion}"
-	implementation "${baseGroupId}:production:${baseVersion}"
-	implementation "${baseGroupId}:project:${baseVersion}"
-	implementation "${baseGroupId}:request:${baseVersion}"
-	implementation "${baseGroupId}:adempiere.test:${baseVersion}"
-	implementation "${baseGroupId}:cashflow:${baseVersion}"
-	implementation "${baseGroupId}:manufacturing:${baseVersion}"
-	implementation "${baseGroupId}:wms:${baseVersion}"
-	implementation "${baseGroupId}:openid-authentication:${baseVersion}"
-	implementation "${baseGroupId}:investment-and-loan:${baseVersion}"
-	implementation "${baseGroupId}:time-and-attendance:${baseVersion}"
-	implementation "${baseGroupId}:loan:${baseVersion}"
-	implementation "${baseGroupId}:discord-notifier:${baseVersion}"
-	implementation "${baseGroupId}:telegram-notifier:${baseVersion}"
-	implementation "${baseGroupId}:tools:${baseVersion}"
-	implementation "${baseGroupId}:jasperreports:${baseVersion}"
-	implementation "${baseGroupId}:adempiere-business-processors:1.0.9"
-	implementation "${baseGroupId}:adempiere-jwt-token:1.0.2"
-	implementation "${baseGroupId}:adempiere-dashboard-improvements:1.0.7"
-	implementation "${baseGroupId}:adempiere-pos-improvements:1.0.0"
-	implementation "${baseGroupId}:adempiere-kafka-connector:1.0.0"
 	implementation "${baseGroupId}:adempiere-grpc-utils:1.0.0"
 	//	Others
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
@@ -183,13 +154,13 @@ publishing {
     }
     publications {
 		mavenJava(MavenPublication) {
-        	groupId 'org.adempiere.middleware'
-            artifactId 'adempiere-middleware'
+        	groupId 'org.adempiere.template'
+            artifactId 'adempiere-grpc-template-service'
             version packageVersion
            	from components.java
            	pom {
-                name = 'ADempiere Middleware'
-                description = 'A Middleware for ADempiere ERP'
+                name = 'ADempiere Template'
+                description = 'A Template for ADempiere ERP'
                 url = 'https://www.erpya.com/'
                 licenses {
                     license {

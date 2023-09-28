@@ -31,7 +31,7 @@ on:
 jobs:
 
   build-ci:
-    name: Build Middleware
+    name: Build Template
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo

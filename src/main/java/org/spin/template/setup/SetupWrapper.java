@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License                 *
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.            *
  ************************************************************************************/
-package org.spin.server.setup;
+package org.spin.template.setup;
 
 /**
  * Determinate all ADempiere client setup values for Human Resource

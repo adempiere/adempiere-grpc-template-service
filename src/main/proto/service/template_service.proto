@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "org.spin.proto.service";
+option java_package = "org.spin.proto.template_service";
 option java_multiple_files = true;
 
 import "google/api/annotations.proto";
@@ -8,7 +8,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 
-package service;
+package template_service;
 
 // Get Entity Request
 message GetEntityRequest {
@@ -74,80 +74,8 @@ message DeleteEntitiesBatchRequest {
 	repeated int32 ids = 2;
 }
 
-//	Entities Selections
-message KeyValueSelection {
-	int32 selection_id = 1;
-	google.protobuf.Struct values = 2;
-}
-
-// BusinessProcess Request
-message RunBusinessProcessRequest {
-	int32 id = 1;
-	string process_code = 2;
-	string table_name = 3;
-	int32 record_id = 4;
-	int32 table_selected_id = 5;
-	string report_type = 6;
-	int32 print_format_id = 7;
-	int32 report_view_id = 8;
-	bool is_summary = 9;
-	google.protobuf.Struct parameters = 10;
-	repeated KeyValueSelection selections = 11;
-}
-
-message RunBusinessProcessResponse {
-	int32 id = 1;
-	string name = 2;
-	string description = 3;
-	int32 instance_id = 4;
-	bool is_error = 5;
-	string summary = 6;
-	string result_table_name = 7;
-	bool is_processing = 8;
-	google.protobuf.Timestamp last_run = 9;
-	repeated ProcessInfoLog logs = 10;
-	google.protobuf.Struct parameters = 11;
-	ReportOutput output = 12;
-	repeated ProcesInstanceParameter process_intance_parameters = 13;
-}
-
-//	BusinessProcess Log result
-message ProcessInfoLog {
-	int32 record_id = 1;
-	string log = 2;
-}
-
-//	Response with log and values from server
-message ProcesInstanceParameter {
-	int32 id = 1;
-	string name = 2;
-	string column_name = 3;
-	google.protobuf.Value value = 4;
-	google.protobuf.Value value_to = 5;
-}
-
-//	Used for get output from report / BusinessProcess like PDF, HTML another result for show to end user
-message ReportOutput {
-	int32 id = 1;
-	string name = 2;
-	string description = 3;
-	string file_name = 4;
-	string output = 5;
-	string mime_type = 6;
-	int64 data_cols = 7;
-	int64 data_rows = 8;
-	string header_name = 9;
-	string footer_name = 10;
-	int32 print_format_id = 11;
-	int32 report_view_id = 12;
-	string table_name = 13;
-	bytes output_stream = 14;
-	//	Output Type
-	string report_type = 15;
-}
-
 // The greeting service definition.
-service MiddlewareService {
+service TemplateService {
 	// Get a Entity
 	rpc GetEntity(GetEntityRequest) returns (Entity) {
 		option (google.api.http) = { get: "/v1/entities/{table_name}/{id}" };
@@ -177,12 +105,5 @@ service MiddlewareService {
 	//	List a Entities
 	rpc ListEntities(ListEntitiesRequest) returns (ListEntitiesResponse) {
 		option (google.api.http) = { get: "/v1/entities/{table_name}" };
-	}
-	//	Request a BusinessProcess / Report
-	rpc RunBusinessProcess(RunBusinessProcessRequest) returns (RunBusinessProcessResponse) {
-		option (google.api.http) = {
-			post: "/v1/process/{process_code}",
-			body: "*"
-		};
 	}
 }

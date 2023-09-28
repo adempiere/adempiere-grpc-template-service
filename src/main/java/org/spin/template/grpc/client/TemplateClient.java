@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License                *
  * along with this program. If not, see <https://www.gnu.org/licenses/>.            *
  ************************************************************************************/
-package org.spin.grpc.client;
+package org.spin.template.grpc.client;
 
 import java.security.Key;
 import java.text.SimpleDateFormat;
@@ -23,14 +23,14 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 import org.compiere.util.CLogger;
-import org.spin.proto.service.Entity;
-import org.spin.proto.service.CreateEntityRequest;
-import org.spin.proto.service.DeleteEntityRequest;
-import org.spin.proto.service.MiddlewareServiceGrpc;
-import org.spin.proto.service.MiddlewareServiceGrpc.MiddlewareServiceBlockingStub;
-import org.spin.server.setup.SetupLoader;
+import org.spin.proto.template_service.Entity;
+import org.spin.proto.template_service.CreateEntityRequest;
+import org.spin.proto.template_service.DeleteEntityRequest;
+import org.spin.proto.template_service.TemplateServiceGrpc;
+import org.spin.proto.template_service.TemplateServiceGrpc.TemplateServiceBlockingStub;
 import org.spin.service.grpc.authentication.TokenManager;
 import org.spin.service.grpc.util.ValueManager;
+import org.spin.template.setup.SetupLoader;
 
 import com.google.protobuf.Struct;
 
@@ -42,10 +42,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-public class MiddlewareClient {
+public class TemplateClient {
 	
 	/**	Logger			*/
-	private static CLogger log = CLogger.getCLogger(MiddlewareClient.class);
+	private static CLogger log = CLogger.getCLogger(TemplateClient.class);
 	
     public static void main(String[] args) throws Exception {
     	if (args == null) {
@@ -67,8 +67,8 @@ public class MiddlewareClient {
                 		SetupLoader.getInstance().getServer().getPort())
                 .usePlaintext()
                 .build();
-        MiddlewareServiceBlockingStub 
-                 client = MiddlewareServiceGrpc
+        TemplateServiceBlockingStub 
+                 client = TemplateServiceGrpc
                  .newBlockingStub(channel);
         String testToken = "Bearer ";
         byte[] keyBytes = Decoders.BASE64.decode(testToken);

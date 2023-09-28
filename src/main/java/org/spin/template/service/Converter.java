@@ -13,14 +13,12 @@
  * Copyright (C) 2012-2018 E.R.P. Consultores y Asociados, S.A. All Rights Reserved. *
  * Contributor(s): Yamel Senih www.erpya.com				  		                 *
  *************************************************************************************/
-package org.spin.grpc.service;
+package org.spin.template.service;
 
 import org.compiere.model.PO;
 import org.compiere.model.POInfo;
 import org.compiere.util.Env;
-import org.compiere.util.Msg;
-import org.spin.proto.service.Entity;
-import org.spin.proto.service.ProcessInfoLog;
+import org.spin.proto.template_service.Entity;
 import org.spin.service.grpc.util.ValueManager;
 
 import com.google.protobuf.Struct;
@@ -60,20 +58,5 @@ public class Converter {
 		builder.setValues(values);
 		//	
 		return builder;
-	}
-	
-	/**
-	 * Convert ProcessInfoLog to gRPC
-	 * @param log
-	 * @return
-	 */
-	public static ProcessInfoLog.Builder convertProcessInfoLog(org.compiere.process.ProcessInfoLog log) {
-		ProcessInfoLog.Builder processLog = ProcessInfoLog.newBuilder();
-		if (log == null) {
-			return processLog;
-		}
-		processLog.setRecordId(log.getP_ID());
-		processLog.setLog(ValueManager.validateNull(Msg.parseTranslation(Env.getCtx(), log.getP_Msg())));
-		return processLog;
 	}
 }

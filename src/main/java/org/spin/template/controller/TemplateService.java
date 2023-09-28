@@ -12,31 +12,29 @@
  * You should have received a copy of the GNU General Public License                *
  * along with this program. If not, see <https://www.gnu.org/licenses/>.            *
  ************************************************************************************/
-package org.spin.grpc.controller;
+package org.spin.template.controller;
 
 import org.compiere.util.CLogger;
-import org.spin.grpc.service.Service;
-import org.spin.proto.service.CreateEntityRequest;
-import org.spin.proto.service.DeleteEntitiesBatchRequest;
-import org.spin.proto.service.DeleteEntityRequest;
-import org.spin.proto.service.Entity;
-import org.spin.proto.service.GetEntityRequest;
-import org.spin.proto.service.ListEntitiesRequest;
-import org.spin.proto.service.ListEntitiesResponse;
-import org.spin.proto.service.MiddlewareServiceGrpc.MiddlewareServiceImplBase;
-import org.spin.proto.service.RunBusinessProcessRequest;
-import org.spin.proto.service.RunBusinessProcessResponse;
-import org.spin.proto.service.UpdateEntityRequest;
+import org.spin.proto.template_service.CreateEntityRequest;
+import org.spin.proto.template_service.DeleteEntitiesBatchRequest;
+import org.spin.proto.template_service.DeleteEntityRequest;
+import org.spin.proto.template_service.Entity;
+import org.spin.proto.template_service.GetEntityRequest;
+import org.spin.proto.template_service.ListEntitiesRequest;
+import org.spin.proto.template_service.ListEntitiesResponse;
+import org.spin.proto.template_service.TemplateServiceGrpc.TemplateServiceImplBase;
+import org.spin.template.service.Service;
+import org.spin.proto.template_service.UpdateEntityRequest;
 
 import com.google.protobuf.Empty;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
-public class Middleware extends MiddlewareServiceImplBase {
+public class TemplateService extends TemplateServiceImplBase {
 	
 	/**	Logger			*/
-	private CLogger log = CLogger.getCLogger(Middleware.class);
+	private CLogger log = CLogger.getCLogger(TemplateService.class);
 	
 	@Override
 	public void getEntity(GetEntityRequest request, StreamObserver<Entity> responseObserver) {
@@ -126,18 +124,4 @@ public class Middleware extends MiddlewareServiceImplBase {
 			);
 		}
 	}
-    
-    @Override
-    public void runBusinessProcess(RunBusinessProcessRequest request, StreamObserver<RunBusinessProcessResponse> responseObserver) {
-    	try {
-    		log.fine("runBusinessProcess: " + request);
-    		responseObserver.onNext(Service.runProcess(request).build());
-			responseObserver.onCompleted();
-		} catch (Exception e) {
-			responseObserver.onError(Status.INTERNAL
-				.withDescription(e.getLocalizedMessage())
-				.withCause(e)
-				.asRuntimeException());
-		}
-    }
 }
