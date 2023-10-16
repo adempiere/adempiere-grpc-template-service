@@ -134,7 +134,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
 	//	ADempiere Core
 	implementation "${baseGroupId}:base:${baseVersion}"
-	implementation "${baseGroupId}:adempiere-grpc-utils:1.0.0"
+	implementation "${baseGroupId}:adempiere-grpc-utils:1.0.6"
 	//	Others
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
 }
