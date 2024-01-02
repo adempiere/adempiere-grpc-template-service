@@ -33,7 +33,7 @@ import org.spin.proto.template_service.GetEntityRequest;
 import org.spin.proto.template_service.ListEntitiesRequest;
 import org.spin.proto.template_service.ListEntitiesResponse;
 import org.spin.proto.template_service.UpdateEntityRequest;
-import org.spin.service.grpc.util.ValueManager;
+import org.spin.service.grpc.util.value.ValueManager;
 
 import com.google.protobuf.Empty;
 import com.google.protobuf.Value;
@@ -54,8 +54,8 @@ public class Service {
 	 * @return
 	 */
 	public static Entity.Builder createEntity(CreateEntityRequest request) {
-		if(Util.isEmpty(request.getTableName())) {
-			throw new AdempiereException("@AD_Table_ID@ @NotFound@");
+		if(Util.isEmpty(request.getTableName(), true)) {
+			throw new AdempiereException("@FillMandatory@ @AD_Table_ID@");
 		}
 		MTable table = MTable.get(Env.getCtx(), request.getTableName());
 		if (table == null || table.getAD_Table_ID() <= 0) {
@@ -190,13 +190,16 @@ public class Service {
 	 * @return
 	 */
 	public static Empty.Builder deleteEntities(DeleteEntitiesBatchRequest request) {
-		Trx.run(transactionName -> {
-			if(Util.isEmpty(request.getTableName())) {
+			Trx.run(transactionName -> {
+			if(Util.isEmpty(request.getTableName(), true)) {
+				throw new AdempiereException("@FillMandatory@ @AD_Table_ID@");
+			}
+			MTable table = MTable.get(Env.getCtx(), request.getTableName());
+			if (table == null || table.getAD_Table_ID() <= 0) {
 				throw new AdempiereException("@AD_Table_ID@ @NotFound@");
 			}
 			List<Integer> ids = request.getIdsList();
 			if (ids.size() > 0) {
-				MTable table = MTable.get(Env.getCtx(), request.getTableName());
 				ids.stream().forEach(id -> {
 					PO entity = table.getPO(id, transactionName);
 					if (entity != null && entity.get_ID() > 0) {

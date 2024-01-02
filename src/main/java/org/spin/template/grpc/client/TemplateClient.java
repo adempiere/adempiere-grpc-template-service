@@ -29,7 +29,7 @@ import org.spin.proto.template_service.DeleteEntityRequest;
 import org.spin.proto.template_service.TemplateServiceGrpc;
 import org.spin.proto.template_service.TemplateServiceGrpc.TemplateServiceBlockingStub;
 import org.spin.service.grpc.authentication.TokenManager;
-import org.spin.service.grpc.util.ValueManager;
+import org.spin.service.grpc.util.value.ValueManager;
 import org.spin.template.setup.SetupLoader;
 
 import com.google.protobuf.Struct;
