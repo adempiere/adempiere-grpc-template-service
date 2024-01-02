@@ -1,5 +1,6 @@
 # This workflow will build a Java project with Gradle
 # This file was contributed by ysenih@erpya.com from ERP Consultores y Asociados, C.A
+# This file was contributed by EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
 name: Publish Project
@@ -36,6 +37,12 @@ jobs:
           GITHUB_DEPLOY_USER: ${{ github.actor }}
           GITHUB_DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
           GITHUB_DEPLOY_REPOSITORY: ${{ secrets.DEPLOY_REPOSITORY }}
+
+      - name: Upload descriptor file artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: adempiere-grpc-template-service.pb
+          path: build/descriptors/adempiere-grpc-template-service.pb
 
       - name: Upload dist app zip artifact
         uses: actions/upload-artifact@v3
@@ -152,7 +159,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: docker/Dockerfile.alpine
+          file: docker/backend_alpine.Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_REPO_NAME }}:alpine-${{ github.event.release.tag_name }}
@@ -192,9 +199,76 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/Dockerfile
+          file: docker/backend_focal.Dockerfile
           platforms: linux/amd64,linux/amd64/v2,linux/arm64/v8
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_REPO_NAME }}:${{ github.event.release.tag_name }}
             ${{ secrets.DOCKER_HUB_REPO_NAME }}:latest
+
+
+
+  # Check secrets to push image in docker hub registry
+  check-proxy-docker-secrets:
+    name: Check if docker hub registry information was set on secrets
+    needs:
+      - build-app
+    runs-on: ubuntu-latest
+    outputs:
+      is_have_secrets: ${{ steps.check_secret_job.outputs.is_have_secrets }}
+    steps:
+      - id: check_secret_job
+        run: |
+          if [[ "${{ secrets.DOCKER_HUB_PROXY_REPO_NAME }}" != "" && \
+                "${{ secrets.DOCKER_USERNAME }}" != "" && \
+                "${{ secrets.DOCKER_TOKEN }}" != "" ]]; \
+          then
+            echo "Secrets to use a container registry are configured in the repo"
+            echo "is_have_secrets=true" >> $GITHUB_OUTPUT
+          else
+            echo "Secrets to use a container registry were not configured in the repo"
+            echo "is_have_secrets=false" >> $GITHUB_OUTPUT
+          fi
+
+  # TODO: Download .tar and add docker image without uncompress
+  # Publish docker multiplatform image in Docker Hub Registry to application
+  push-proxy-imame-dhr:
+    name: Push docker multiplatform image to Docker Hub
+    needs:
+      - check-proxy-docker-secrets
+    # Skip step based on secret
+    if: needs.check-proxy-docker-secrets.outputs.is_have_secrets == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Download descriptor app
+        uses: actions/download-artifact@v3
+        with:
+          name: adempiere-grpc-template-service.pb
+          path: docker/
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          # CONFIGURE DOCKER SECRETS INTO REPOSITORY
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push alpine image in Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: linux/amd64,linux/amd64/v2,linux/arm64/v8
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_PROXY_REPO_NAME }}:${{ github.event.release.tag_name }}
+            ${{ secrets.DOCKER_HUB_PROXY_REPO_NAME }}:latest
