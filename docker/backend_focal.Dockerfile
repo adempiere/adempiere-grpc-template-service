@@ -27,6 +27,7 @@ RUN	apt-get update && \
 	 	fontconfig \
 		ttf-dejavu && \
 	rm -rf /var/lib/apt/lists/* \
+	rm -rf /tmp/* && \
 	echo "Set Timezone..." && \
 	echo $TZ > /etc/timezone
 

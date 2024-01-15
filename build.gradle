@@ -31,8 +31,8 @@ jar {
 }
 
 repositories {
+	mavenLocal()
     mavenCentral()
-    mavenLocal()
     maven {
     	url = System.getenv("GITHUB_DEPLOY_REPOSITORY") ?: System.properties['deploy.repository'] ?: 'https://maven.pkg.github.com'
         credentials {
@@ -109,6 +109,7 @@ task createRelease(type: Copy) {
         }
    	}
 }
+
 dependencies {
 	implementation fileTree(
         dir: 'dependencies',

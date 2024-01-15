@@ -39,6 +39,7 @@ COPY docker/adempiere-grpc-template-service /opt/apps/server
 COPY docker/env.yaml /opt/apps/server/env.yaml
 COPY docker/start.sh /opt/apps/server/start.sh
 
+
 RUN addgroup adempiere && \
 	adduser --disabled-password --gecos "" --ingroup adempiere --no-create-home adempiere && \
 	chown -R adempiere /opt/apps/server/ && \
@@ -48,4 +49,3 @@ USER adempiere
 
 # Start app
 ENTRYPOINT ["sh" , "start.sh"]
-
