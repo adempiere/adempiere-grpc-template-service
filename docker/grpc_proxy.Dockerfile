@@ -23,7 +23,7 @@ WORKDIR /etc/envoy/
 COPY docker/envoy_template.yaml /etc/envoy/envoy_template.yaml
 
 # Proto gRPC descriptor
-COPY docker/adempiere-grpc-template-service-service.pb /data/descriptor.pb
+COPY docker/adempiere-grpc-template-service.pb /data/descriptor.pb
 COPY docker/start_grpc_proxy.sh /etc/envoy/start.sh
 
 
