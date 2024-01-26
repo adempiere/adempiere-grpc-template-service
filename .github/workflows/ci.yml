@@ -1,5 +1,6 @@
 # This workflow will build a Java project with Gradle
 # This file was contributed by ysenih@erpya.com from ERP Consultores y Asociados, C.A
+# This file was contributed by EdwinBetanc0urt@outlook.com https://github.com/EdwinBetanc0urt
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 # Add support to default build
 
@@ -35,10 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Java JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-package: 'jdk'
@@ -54,3 +55,10 @@ jobs:
         with:
           gradle-version: 8.0.2
           arguments: build
+
+      - name: Upload descriptor file artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: adempiere-grpc-template-service.pb
+          path: build/descriptors/adempiere-grpc-template-service.pb
+          retention-days: 7
