@@ -83,7 +83,7 @@ services:
       timeout: 10s
     volumes:
       - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro
-      - ./envoy/definitions/adempiere-grpc-template-service.dsc:/data/descriptor.dsc:ro
+      - ./envoy/definitions/descriptor.dsc:/data/descriptor.dsc:ro
     depends_on:
       - adempiere.grpc.service
     ports:
