@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11.0.22_7-jdk-alpine
+FROM eclipse-temurin:11.0.24_8-jdk-focal
 
 LABEL maintainer="ySenih@erpya.com; EdwinBetanc0urt@outlook.com;" \
 	description="Backend gRPC"
@@ -14,19 +14,20 @@ ENV \
 	DB_PASSWORD="adempiere" \
 	DB_TYPE="PostgreSQL" \
 	ADEMPIERE_APPS_TYPE="" \
+	JAVA_OPTIONS="\"-Xms64M\" \"-Xmx1512M\"" \
 	TZ="America/Caracas"
 
 EXPOSE ${SERVER_PORT}
 
 
 # Add operative system dependencies
-RUN	apk update && \
-	apk add --no-cache \
+RUN	apt-get update && \
+	apt-get install -y \
 		tzdata \
 		bash \
 	 	fontconfig \
 		ttf-dejavu && \
-	rm -rf /var/cache/apk/* && \
+	rm -rf /var/lib/apt/lists/* \
 	rm -rf /tmp/* && \
 	echo "Set Timezone..." && \
 	echo $TZ > /etc/timezone
