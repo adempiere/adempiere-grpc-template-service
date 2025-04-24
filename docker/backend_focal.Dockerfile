@@ -13,7 +13,13 @@ ENV \
 	DB_USER="adempiere" \
 	DB_PASSWORD="adempiere" \
 	DB_TYPE="PostgreSQL" \
-	ADEMPIERE_APPS_TYPE="" \
+	IDLE_TIMEOUT="300" \
+	MINIMUM_IDLE="1" \
+	MAXIMUM_POOL_SIZE="10" \
+	CONNECTION_TIMEOUT="5000" \
+	MAXIMUM_LIFETIME="6000" \
+	KEEPALIVE_TIME="360000" \
+	CONNECTION_TEST_QUERY="\"SELECT 1\"" \
 	TZ="America/Caracas"
 
 EXPOSE ${SERVER_PORT}
@@ -40,6 +46,7 @@ COPY docker/env.yaml /opt/apps/server/env.yaml
 COPY docker/start.sh /opt/apps/server/start.sh
 
 
+# Add adempiere as user
 RUN addgroup adempiere && \
 	adduser --disabled-password --gecos "" --ingroup adempiere --no-create-home adempiere && \
 	chown -R adempiere /opt/apps/server/ && \
