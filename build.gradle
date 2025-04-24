@@ -14,8 +14,8 @@ java {
 	sourceCompatibility = JavaVersion.VERSION_11
 }
 
-def grpcVersion = '1.63.0'
-def protobufVersion = '3.25.3'
+def grpcVersion = "1.65.1"
+def protobufVersion = "3.25.4"
 def baseVersion = '3.9.4'
 def baseGroupId = 'io.github.adempiere'
 def privateDependencyBaseVersion = "adempiere-3.9.4"
