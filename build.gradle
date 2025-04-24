@@ -185,6 +185,8 @@ dependencies {
 
 	//	ADempiere Core
 	implementation "${baseGroupId}:base:${baseVersion}"
+
+	// ADempiere Projects with additional features
 	implementation "${baseGroupId}:adempiere-grpc-utils:1.5.7"
 
 	//	Others
