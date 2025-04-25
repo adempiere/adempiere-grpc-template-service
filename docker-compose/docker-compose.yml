@@ -66,7 +66,6 @@ services:
       DB_PORT: ${GRPC_SERVER_DB_PORT}
       DB_NAME: ${GRPC_SERVER_DB_NAME}
       DB_PASSWORD: ${GRPC_SERVER_DB_PASSWORD}
-      JWT_SECRET_KEY: ${GRPC_SERVER_JWT_SECRET_KEY}
     networks:
       - shared_network
 

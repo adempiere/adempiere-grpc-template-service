@@ -14,8 +14,8 @@ java {
 	sourceCompatibility = JavaVersion.VERSION_11
 }
 
-def grpcVersion = '1.63.0'
-def protobufVersion = '3.25.3'
+def grpcVersion = "1.65.1"
+def protobufVersion = "3.25.4"
 def baseVersion = '3.9.4'
 def baseGroupId = 'io.github.adempiere'
 def privateDependencyBaseVersion = "adempiere-3.9.4"
@@ -40,7 +40,6 @@ jar {
 run {
 	doFirst {
 		// Set environment variables by .env project file
-		environment "ADEMPIERE_APPS_TYPE", projectEnv.get("ADEMPIERE_APPS_TYPE", null) ?: "wildfly"
 		environment "TZ", projectEnv.get("TZ", null) ?: "America/Caracas"
 	}
 	args = [
@@ -50,24 +49,26 @@ run {
 
 repositories {
 	mavenLocal()
-    mavenCentral()
-    maven {
+	mavenCentral()
+	maven {
 		// Custom GitHub Repository (ADempiere by Default)
 		url = findProperty("deployRepository") ?: System.properties['deploy.repository'] ?:
 			projectEnv.get("GITHUB_DEPLOY_REPOSITORY", null) ?: System.getenv("GITHUB_DEPLOY_REPOSITORY") ?:
 			"https://maven.pkg.github.com/adempiere/adempiere"
 		credentials {
 			// project property, system property, .env project file, system enviroment variable
-			username = findProperty("deployUsername") ?: System.properties['zdeploy.user'] ?:
+			username = findProperty("deployUsername") ?: System.properties['deploy.user'] ?:
 				projectEnv.get("GITHUB_DEPLOY_USER", null) ?: System.getenv("GITHUB_DEPLOY_USER")
 			password = findProperty("deployPassword") ?: System.properties['deploy.token'] ?:
 				projectEnv.get("GITHUB_DEPLOY_TOKEN", null) ?: System.getenv("GITHUB_DEPLOY_TOKEN")
 		}
+	}
+	maven {
 		// ADempiere organization maven github registry
 		url = "https://maven.pkg.github.com/adempiere/adempiere"
 		credentials {
 			// project property, system property, .env project file, system enviroment variable
-			username = findProperty("deployUsername") ?: System.properties['zdeploy.user'] ?:
+			username = findProperty("deployUsername") ?: System.properties['deploy.user'] ?:
 				projectEnv.get("GITHUB_DEPLOY_USER", null) ?: System.getenv("GITHUB_DEPLOY_USER")
 			password = findProperty("deployPassword") ?: System.properties['deploy.token'] ?:
 				projectEnv.get("GITHUB_DEPLOY_TOKEN", null) ?: System.getenv("GITHUB_DEPLOY_TOKEN")
@@ -186,6 +187,8 @@ dependencies {
 
 	//	ADempiere Core
 	implementation "${baseGroupId}:base:${baseVersion}"
+
+	// ADempiere Projects with additional features
 	implementation "${baseGroupId}:adempiere-grpc-utils:1.5.7"
 
 	//	Others
