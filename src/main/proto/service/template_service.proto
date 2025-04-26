@@ -10,6 +10,17 @@ import "google/protobuf/struct.proto";
 
 package template_service;
 
+// System Info
+message GetSystemInfoRequest {
+	// empty request
+}
+message SystemInfo {
+	// pos homologation
+	google.protobuf.Timestamp date_version = 1;
+	string main_version = 2;
+	string implementation_version = 3;
+}
+
 // Get Entity Request
 message GetEntityRequest {
 	int32 id = 1;
@@ -76,6 +87,13 @@ message DeleteEntitiesBatchRequest {
 
 // The greeting service definition.
 service TemplateService {
+	// Get a System Information
+	rpc GetSystemInfo(GetSystemInfoRequest) returns (SystemInfo) {
+		option (google.api.http) = {
+			get: "/v1/entities/system-info"
+		};
+	}
+
 	// Get a Entity
 	rpc GetEntity(GetEntityRequest) returns (Entity) {
 		option (google.api.http) = { get: "/v1/entities/{table_name}/{id}" };

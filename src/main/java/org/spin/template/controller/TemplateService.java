@@ -20,8 +20,10 @@ import org.spin.proto.template_service.DeleteEntitiesBatchRequest;
 import org.spin.proto.template_service.DeleteEntityRequest;
 import org.spin.proto.template_service.Entity;
 import org.spin.proto.template_service.GetEntityRequest;
+import org.spin.proto.template_service.GetSystemInfoRequest;
 import org.spin.proto.template_service.ListEntitiesRequest;
 import org.spin.proto.template_service.ListEntitiesResponse;
+import org.spin.proto.template_service.SystemInfo;
 import org.spin.proto.template_service.TemplateServiceGrpc.TemplateServiceImplBase;
 import org.spin.template.service.Service;
 import org.spin.proto.template_service.UpdateEntityRequest;
@@ -35,7 +37,26 @@ public class TemplateService extends TemplateServiceImplBase {
 	
 	/**	Logger			*/
 	private CLogger log = CLogger.getCLogger(TemplateService.class);
-	
+
+
+	@Override
+	public void getSystemInfo(GetSystemInfoRequest request, StreamObserver<SystemInfo> responseObserver) {
+		try {
+			SystemInfo.Builder builder = Service.getSystemInfo();
+			responseObserver.onNext(builder.build());
+			responseObserver.onCompleted();
+		} catch (Exception e) {
+			log.severe(e.getLocalizedMessage());
+			responseObserver.onError(
+				Status.INTERNAL
+					.withDescription(e.getLocalizedMessage())
+					.withCause(e)
+					.asRuntimeException()
+			);
+		}
+	}
+
+
 	@Override
 	public void getEntity(GetEntityRequest request, StreamObserver<Entity> responseObserver) {
 		try {

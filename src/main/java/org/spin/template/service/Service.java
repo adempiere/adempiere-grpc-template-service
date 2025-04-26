@@ -25,6 +25,7 @@ import org.compiere.model.PO;
 import org.compiere.util.Env;
 import org.compiere.util.Trx;
 import org.compiere.util.Util;
+import org.spin.base.Version;
 import org.spin.proto.template_service.CreateEntityRequest;
 import org.spin.proto.template_service.DeleteEntitiesBatchRequest;
 import org.spin.proto.template_service.DeleteEntityRequest;
@@ -32,7 +33,10 @@ import org.spin.proto.template_service.Entity;
 import org.spin.proto.template_service.GetEntityRequest;
 import org.spin.proto.template_service.ListEntitiesRequest;
 import org.spin.proto.template_service.ListEntitiesResponse;
+import org.spin.proto.template_service.SystemInfo;
 import org.spin.proto.template_service.UpdateEntityRequest;
+import org.spin.service.grpc.util.value.StringManager;
+import org.spin.service.grpc.util.value.TimeManager;
 import org.spin.service.grpc.util.value.ValueManager;
 
 import com.google.protobuf.Empty;
@@ -46,7 +50,36 @@ public class Service {
 		X_AD_Table.ACCESSLEVEL_SystemPlusClient,
 		X_AD_Table.ACCESSLEVEL_ClientPlusOrganization
 	);
-	
+
+
+	public static SystemInfo.Builder getSystemInfo() {
+		SystemInfo.Builder builder = SystemInfo.newBuilder();
+
+		// backend info
+		builder
+			.setDateVersion(
+				ValueManager.getTimestampFromDate(
+					TimeManager.getTimestampFromString(
+						Version.DATE_VERSION
+					)
+				)
+			)
+			.setMainVersion(
+				StringManager.getValidString(
+					Version.MAIN_VERSION
+				)
+			)
+			.setImplementationVersion(
+				StringManager.getValidString(
+					Version.IMPLEMENTATION_VERSION
+				)
+			)
+		;
+
+		return builder;
+	}
+
+
 	/**
 	 * Create Entity
 	 * @param context

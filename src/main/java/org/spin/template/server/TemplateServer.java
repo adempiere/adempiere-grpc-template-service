@@ -44,6 +44,7 @@ public class TemplateServer {
 	/** Services/Methods allow request without Bearer token validation */
 	private List<String> ALLOW_REQUESTS_WITHOUT_TOKEN = Arrays.asList(
 		// proto package . proto service / proto method
+		"template_service.TemplateService/GetSystemInfo"
 	);
 
 	/**	Revoke session	*/
@@ -85,10 +86,18 @@ public class TemplateServer {
 		//	
 		ServerBuilder<?> serverBuilder;
 		if(SetupLoader.getInstance().getServer().isTlsEnabled()) {
-			serverBuilder = NettyServerBuilder.forPort(SetupLoader.getInstance().getServer().getPort())
-				.sslContext(getSslContextBuilder().build());
+			serverBuilder = NettyServerBuilder
+				.forPort(
+					SetupLoader.getInstance().getServer().getPort()
+				)
+				.sslContext(
+					getSslContextBuilder().build()
+				)
+			;
 		} else {
-			serverBuilder = ServerBuilder.forPort(SetupLoader.getInstance().getServer().getPort());
+			serverBuilder = ServerBuilder.forPort(
+				SetupLoader.getInstance().getServer().getPort()
+			);
 		}
 
 		// Validate JWT on all requests
